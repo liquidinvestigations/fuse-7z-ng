@@ -14,14 +14,15 @@ mkdir -p $BUILD_FUSE_7z
 
 (
 cd $BUILD_LIB7ZIP
-cmake $SOURCE_LIB7ZIP
+cmake $SOURCE_LIB7ZIP -DCMAKE_CXX_FLAGS=-w
 make -j8
-make install
 )
 
 (
 cd $BUILD_FUSE_7z
-cmake $SOURCE_FUSE_7z  -Dlib7zip_binDir=$BUILD_LIB7ZIP -Dlib7zip_includeDir=$SOURCE_LIB7ZIP/src
+cmake $SOURCE_FUSE_7z  -Dlib7zip_binDir=$BUILD_LIB7ZIP/src -Dlib7zip_includeDir=$SOURCE_LIB7ZIP/src -DCMAKE_CXX_FLAGS=-w
 make -j8
-make install
+cp fuse_7z_ng /usr/local/bin
 )
+
+rm -rf $BUILD
