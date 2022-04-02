@@ -10,17 +10,15 @@ fork of fuse-7z-ng
 - add Dockerfile to test out our exact configuration
 
 
-how to use the fork
--------------------
+how to use the fork on debian
+------------------------------
 
-```
-apt-get -yqq update && apt-get install -yqq s3fs cmake libfuse-dev build-essential libfuse-dev libmhash-dev libminizip-dev     build-essential pkg-config cmake g++ clang libfuse-dev libmhash-dev libminizip-dev zlib1g-dev libssl-dev libgtest-dev git
+    apt-get -yqq update && apt-get install -yqq s3fs cmake libfuse-dev build-essential libfuse-dev libmhash-dev libminizip-dev     build-essential pkg-config cmake g++ clang libfuse-dev libmhash-dev libminizip-dev zlib1g-dev libssl-dev libgtest-dev git
 
-git clone https://github.com/liquidinvestigations/fuse-7z-ng
-cd fuse-7z-ng
+    git clone https://github.com/liquidinvestigations/fuse-7z-ng
+    cd fuse-7z-ng
 
-./build.sh
-```
+    ./build.sh
 
 
 fuse-7z-ng
