@@ -1,3 +1,12 @@
+fork of fuse-7z-ng
+==================
+
+- copy p7zip and lib7zip code directly in this repo
+- include fixes from https://github.com/kedazo/fuse-7z-ng/pull/7
+- add build.sh script that follows instructions
+- add Dockerfile to test out our exact configuration
+
+
 fuse-7z-ng
 ==========
 
