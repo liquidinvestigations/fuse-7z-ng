@@ -1,0 +1,86 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY % concatstuff SYSTEM "concat.ent">
+%concatstuff;
+]>
+<refentry id="concat-fuse">
+  <refmeta>
+    <refentrytitle>
+      <application>concat-fuse</application>
+    </refentrytitle>
+    <manvolnum>1</manvolnum>
+    <refmiscinfo class="version">&concat_version;</refmiscinfo>
+    <refmiscinfo class="author">&concat_version;</refmiscinfo>
+    <refmiscinfo class="manual">User Commands</refmiscinfo>
+    <refmiscinfo class="source">concat-fuse</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>
+      <application>concat-fuse</application>
+    </refname>
+    <refpurpose>
+      A virtual filesystem that allows access of groups of files as if
+      they were a single large one
+    </refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>concat-fuse</command>
+      <arg choice="opt" rep="repeat">OPTION</arg>
+      <arg choice="opt">MOUNTPOINT</arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+      <command>concat-fuse</command> is a FUSE based filesystem that
+      allows accessing groups of files as if they were a single large
+      file. In most cases direct interaction with
+      <command>concat-fuse</command> isn't needed, as the convinience
+      tool <command>cfconcat</command> hides the plumbing away.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Options</title>
+    <para>
+      <command>concat-fuse</command> doesn't provide options on it's
+      own, but will accept the general mount options provided by <citerefentry>
+      <refentrytitle>fuse</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Structure</title>
+    <para>
+      The filesystem, once mounted, provides three subdirectories
+      named <filename>from-file0/</filename>,
+      <filename>from-glob0/</filename> and
+      <filename>from-zip/</filename>. Writing a '\0' separated list of
+      files or glob pattern to the <filename>control</filename> file
+      within those directories will create a virtual file containing
+      all the content of the individual files. The
+      <filename>from-zip/control</filename> only takes only a single
+      filename, without a '\0'. The name of the virtual file is the
+      SHA1 checksum of the data written to the control file.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>See also</title>
+    <para>
+      <citerefentry>
+        <refentrytitle>cfconcat</refentrytitle>
+        <manvolnum>1</manvolnum>
+        </citerefentry>,
+        <citerefentry>
+          <refentrytitle>fuse</refentrytitle>
+          <manvolnum>8</manvolnum>
+        </citerefentry>
+    </para>
+  </refsect1>
+</refentry>

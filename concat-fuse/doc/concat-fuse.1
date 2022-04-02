@@ -1,0 +1,45 @@
+'\" -*- coding: us-ascii -*-
+.if \n(.g .ds T< \\FC
+.if \n(.g .ds T> \\F[\n[.fam]]
+.de URL
+\\$2 \(la\\$1\(ra\\$3
+..
+.if \n(.g .mso www.tmac
+.TH "concat-fuse " 1 "4 May 2015" 0.3.0 "User Commands"
+.SH NAME
+concat-fuse
+\- A virtual filesystem that allows access of groups of files as if they were a single large one 
+.SH SYNOPSIS
+'nh
+.fi
+.ad l
+\fBconcat-fuse\fR \kx
+.if (\nx>(\n(.l/2)) .nr x (\n(.l/5)
+'in \n(.iu+\nxu
+[OPTION]\&... [MOUNTPOINT]
+'in \n(.iu-\nxu
+.ad b
+'hy
+.SH DESCRIPTION
+\fBconcat-fuse\fR is a FUSE based filesystem that
+allows accessing groups of files as if they were a single large
+file. In most cases direct interaction with
+\fBconcat-fuse\fR isn't needed, as the convinience
+tool \fBcfconcat\fR hides the plumbing away.
+.SH OPTIONS
+\fBconcat-fuse\fR doesn't provide options on it's
+own, but will accept the general mount options provided by \fBfuse\fR(8)
+.SH STRUCTURE
+The filesystem, once mounted, provides three subdirectories
+named \*(T<\fIfrom\-file0/\fR\*(T>,
+\*(T<\fIfrom\-glob0/\fR\*(T> and
+\*(T<\fIfrom\-zip/\fR\*(T>. Writing a '\e0' separated list of
+files or glob pattern to the \*(T<\fIcontrol\fR\*(T> file
+within those directories will create a virtual file containing
+all the content of the individual files. The
+\*(T<\fIfrom\-zip/control\fR\*(T> only takes only a single
+filename, without a '\e0'. The name of the virtual file is the
+SHA1 checksum of the data written to the control file.
+.SH "SEE ALSO"
+\fBcfconcat\fR(1),
+\fBfuse\fR(8)

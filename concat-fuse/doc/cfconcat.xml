@@ -1,0 +1,232 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY % concatstuff SYSTEM "concat.ent">
+%concatstuff;
+]>
+<refentry id="cfconcat">
+  <refmeta>
+    <refentrytitle>
+      <application>cfconcat</application>
+    </refentrytitle>
+    <manvolnum>1</manvolnum>
+    <refmiscinfo class="version">&concat_version;</refmiscinfo>
+    <refmiscinfo class="author">&concat_version;</refmiscinfo>
+    <refmiscinfo class="manual">User Commands</refmiscinfo>
+    <refmiscinfo class="source">cfconcat</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>
+      <application>cfconcat</application>
+    </refname>
+    <refpurpose>
+      Access groups of files as if they were a single large file
+    </refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>cfconcat</command>
+      <arg choice="opt" rep="repeat">OPTION</arg>
+      <arg choice="opt">-h</arg>
+      <arg choice="opt">FILES</arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+      <command>cfconcat</command> is a wrapper around
+      <command>concat-fuse</command> that allows accessing groups of
+      files, selected by a glob pattern, as if they were a single
+      large file. It works by mounting the virtual filesystem
+      <command>concat-fuse</command> and then accessing a file within
+      it that acts as if it contained all the individual files
+      concatenated.
+    </para>
+    <para>
+      <command>cfconcat</command> is especially useful for doing gapless
+      playback of video files (when the video format allows it) or for
+      accessing archive files that have been `split` into multiple
+      parts and where a temporary file would be to slow, large and
+      cumbersome to deal with.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Options</title>
+    <variablelist>
+
+      <varlistentry>
+        <term><option>-h</option>, <option>--help</option></term>
+        <listitem>
+          <para>Display help text and exit.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-u</option>, <option>--unmount</option></term>
+        <listitem>
+          <para>Unmount concat-fuse</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-e</option> <replaceable>EXE</replaceable>, <option>--exe</option> <replaceable>EXE</replaceable> </term>
+        <listitem>
+          <para>Use EXE instead of concat-fuse</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-m</option> <replaceable>MOUNTPOINT</replaceable>,
+        <option>--mountpoint</option> <replaceable>MOUNTPOINT</replaceable></term>
+        <listitem>
+          <para>Use MOUNTPOINT instead of default</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-n</option>, <option>--dry-run</option></term>
+        <listitem>
+          <para>Don't send file list to concat-fuse, print to stdout</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-k</option>, <option>--keep</option></term>
+        <listitem>
+          <para>Continue even when files are missing</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--ext</option> <replaceable>SUFFIX</replaceable></term>
+        <listitem>
+          <para>Add a suffix to the virtual filename, useful in cases
+          when an application can't handle arbitary filenames and
+          require a file extension to be present. The
+          <replaceable>SUFFIX</replaceable> is appended directly to
+          the filename and should thus include a dot (i.e.
+          <filename>.zip</filename> and not just
+          <filename>zip</filename></para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>FILES</replaceable></term>
+        <listitem>
+          <para>Files to virtually concatenate</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--from-file</option> <replaceable>FILE</replaceable></term>
+        <listitem>
+          <para>Read files from FILE, newline separated</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--from-file0</option> <replaceable>FILE</replaceable></term>
+        <listitem>
+          <para>Read files from FILE, <code>\0</code> separated</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-</option></term>
+        <listitem>
+          <para>Read files from stdin</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-0</option></term>
+        <listitem>
+          <para>Read files from stdin, '\0' separated</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-g</option> <replaceable>GLOB</replaceable>, <option>--glob</option> <replaceable>GLOB</replaceable></term>
+        <listitem>
+          <para>Use glob the given <replaceable>GLOB</replaceable></para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-z</option> <replaceable>ARCHIVE</replaceable>, <option>--zip</option> <replaceable>ARCHIVE</replaceable></term>
+        <listitem>
+          <para>Read files from a .zip archive instead of from the filesystem</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Example</title>
+    <para>
+      A simple example of <command>cfconcat</command> use would look like this:
+    </para>
+    <programlisting><![CDATA[$ echo "File Number One" > /tmp/1.txt
+$ echo "File Number Two" > /tmp/2.txt
+$ cat $(cfconcat /tmp/*.txt)
+File Number One
+File Number Two]]></programlisting>
+
+    <para>
+      The glob pattern can also provided to <command>cfconcat</command>
+      directly instead of being expanded by the Shell, this allows
+      circumventing:
+    </para>
+    <screen>bash: /home/ingo/bin/cfconcat: Argument list too long</screen>
+    <para>
+      Furthermore <command>touch</command>'ing the virtual file or
+      resubmitting the glob pattern will update the virtual file in
+      case new files have arrived matching the pattern. Note that the
+      glob pattern needs to be quoted when supplied to
+      <command>--glob</command>.
+    </para>
+    <programlisting><![CDATA[$ echo "File Number One" > /tmp/1.txt
+$ echo "File Number Two" > /tmp/2.txt
+$ cat $(cfconcat --glob "/tmp/*.txt")
+File Number One
+File Number Two]]></programlisting>
+
+    <para>
+      Once done with the virtual file the virtual filesystem can be
+      unmounted with:
+    </para>
+    <programlisting><![CDATA[$ cfconcat -u]]></programlisting>
+  </refsect1>
+
+  <refsect1>
+    <title>Files</title>
+    <variablelist>
+      <varlistentry>
+        <term><filename>$XDG_RUNTIME_DIR/concats-fuse/</filename></term>
+        <term><filename>$HOME/.concat-fuse/</filename></term>
+        <listitem>
+          <para>Default mount location that <command>cfconcat</command> uses
+          for <command>concat-fuse</command></para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>See also</title>
+    <para>
+      <citerefentry>
+        <refentrytitle>concat-fuse</refentrytitle>
+        <manvolnum>1</manvolnum>
+        </citerefentry>,
+        <citerefentry>
+          <refentrytitle>fuse</refentrytitle>
+          <manvolnum>8</manvolnum>
+        </citerefentry>
+    </para>
+  </refsect1>
+</refentry>

@@ -1,0 +1,132 @@
+'\" -*- coding: us-ascii -*-
+.if \n(.g .ds T< \\FC
+.if \n(.g .ds T> \\F[\n[.fam]]
+.de URL
+\\$2 \(la\\$1\(ra\\$3
+..
+.if \n(.g .mso www.tmac
+.TH "cfconcat " 1 "12 May 2015" 0.3.2 "User Commands"
+.SH NAME
+cfconcat
+\- Access groups of files as if they were a single large file 
+.SH SYNOPSIS
+'nh
+.fi
+.ad l
+\fBcfconcat\fR \kx
+.if (\nx>(\n(.l/2)) .nr x (\n(.l/5)
+'in \n(.iu+\nxu
+[OPTION]\&... [-h] [FILES]
+'in \n(.iu-\nxu
+.ad b
+'hy
+.SH DESCRIPTION
+\fBcfconcat\fR is a wrapper around
+\fBconcat-fuse\fR that allows accessing groups of
+files, selected by a glob pattern, as if they were a single
+large file. It works by mounting the virtual filesystem
+\fBconcat-fuse\fR and then accessing a file within
+it that acts as if it contained all the individual files
+concatenated.
+.PP
+\fBcfconcat\fR is especially useful for doing gapless
+playback of video files (when the video format allows it) or for
+accessing archive files that have been `split` into multiple
+parts and where a temporary file would be to slow, large and
+cumbersome to deal with.
+.SH OPTIONS
+.TP 
+\*(T<\fB\-h\fR\*(T>, \*(T<\fB\-\-help\fR\*(T>
+Display help text and exit.
+.TP 
+\*(T<\fB\-u\fR\*(T>, \*(T<\fB\-\-unmount\fR\*(T>
+Unmount concat-fuse
+.TP 
+\*(T<\fB\-e\fR\*(T> \fIEXE\fR, \*(T<\fB\-\-exe\fR\*(T> \fIEXE\fR 
+Use EXE instead of concat-fuse
+.TP 
+\*(T<\fB\-m\fR\*(T> \fIMOUNTPOINT\fR, \*(T<\fB\-\-mountpoint\fR\*(T> \fIMOUNTPOINT\fR
+Use MOUNTPOINT instead of default
+.TP 
+\*(T<\fB\-n\fR\*(T>, \*(T<\fB\-\-dry\-run\fR\*(T>
+Don't send file list to concat-fuse, print to stdout
+.TP 
+\*(T<\fB\-k\fR\*(T>, \*(T<\fB\-\-keep\fR\*(T>
+Continue even when files are missing
+.TP 
+\*(T<\fB\-\-ext\fR\*(T> \fISUFFIX\fR
+Add an suffix to the virtual filename, useful in cases
+where an application can't handle arbitary filenames and
+require an extension for proper detection. The
+\fISUFFIX\fR is appended directly to
+the filename and should thus include a dot (i.e.
+\*(T<\fI\&.zip\fR\*(T> and not just
+\*(T<\fIzip\fR\*(T>
+.TP 
+\fIFILES\fR
+Files to virtually concatenate
+.TP 
+\*(T<\fB\-\-from\-file\fR\*(T> \fIFILE\fR
+Read files from FILE, newline separated
+.TP 
+\*(T<\fB\-\-from\-file0\fR\*(T> \fIFILE\fR
+Read files from FILE, \*(T<\e0\*(T> separated
+.TP 
+\*(T<\fB\-\fR\*(T>
+Read files from stdin
+.TP 
+\*(T<\fB\-0\fR\*(T>
+Read files from stdin, '\e0' separated
+.TP 
+\*(T<\fB\-g\fR\*(T> \fIGLOB\fR, \*(T<\fB\-\-glob\fR\*(T> \fIGLOB\fR
+Use glob the given \fIGLOB\fR
+.TP 
+\*(T<\fB\-z\fR\*(T> \fIARCHIVE\fR, \*(T<\fB\-\-zip\fR\*(T> \fIARCHIVE\fR
+Read files from a .zip archive instead of from the filesystem
+.SH EXAMPLE
+A simple example of \fBcfconcat\fR use would look like this:
+.PP
+.nf
+\*(T<$ echo "File Number One" > /tmp/1.txt
+$ echo "File Number Two" > /tmp/2.txt
+$ cat $(cfconcat /tmp/*.txt)
+File Number One
+File Number Two\*(T>
+.fi
+.PP
+The glob pattern can also provided to \fBcfconcat\fR
+directly instead of being expanded by the Shell, this allows
+circumventing:
+.PP
+.nf
+\*(T<bash: /home/ingo/bin/cfconcat: Argument list too long\*(T>
+.fi
+.PP
+Furthermore \fBtouch\fR'ing the virtual file or
+resubmitting the glob pattern will update the virtual file in
+case new files have arrived matching the pattern. Note that the
+glob pattern needs to be quoted when supplied to
+\fB--glob\fR.
+.PP
+.nf
+\*(T<$ echo "File Number One" > /tmp/1.txt
+$ echo "File Number Two" > /tmp/2.txt
+$ cat $(cfconcat \-\-glob "/tmp/*.txt")
+File Number One
+File Number Two\*(T>
+.fi
+.PP
+Once done with the virtual file the virtual filesystem can be
+unmounted with:
+.PP
+.nf
+\*(T<$ cfconcat \-u\*(T>
+.fi
+.SH FILES
+.TP 
+\*(T<\fI$XDG_RUNTIME_DIR/concats\-fuse/\fR\*(T>, \*(T<\fI$HOME/.concat\-fuse/\fR\*(T>
+Default mount location that \fBcfconcat\fR uses
+for \fBconcat-fuse\fR
+.SH "SEE ALSO"
+\fBconcat-fuse\fR(1),
+\fBfuse\fR(8)

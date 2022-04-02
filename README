@@ -1,10 +1,26 @@
 fork of fuse-7z-ng
 ==================
 
-- copy p7zip and lib7zip code directly in this repo
+- copy code directly into this repo
+  - lib7zip: https://github.com/stonewell/lib7zip
+  - p7zip: https://github.com/btolab/p7zip
+  - concat-fuse: https://gitlab.com/concat-fuse/concat-fuse
 - include fixes from https://github.com/kedazo/fuse-7z-ng/pull/7
-- add build.sh script that follows instructions
+- add build.sh script that follows instructions for all repos
 - add Dockerfile to test out our exact configuration
+
+
+how to use the fork
+-------------------
+
+```
+apt-get -yqq update && apt-get install -yqq s3fs cmake libfuse-dev build-essential libfuse-dev libmhash-dev libminizip-dev     build-essential pkg-config cmake g++ clang libfuse-dev libmhash-dev libminizip-dev zlib1g-dev libssl-dev libgtest-dev git
+
+git clone https://github.com/liquidinvestigations/fuse-7z-ng
+cd fuse-7z-ng
+
+./build.sh
+```
 
 
 fuse-7z-ng
